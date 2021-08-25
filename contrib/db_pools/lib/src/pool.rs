@@ -228,6 +228,61 @@ mod sqlx {
         }
     }
 }
+use sea_orm::SqlxSqlitePoolConnection;
+
+#[cfg(feature = "seaorm_sqlx_sqlite")]
+mod seaorm_sqlx_sqlite {
+    use super::{Config, Duration, Error, Figment};
+    // use sqlx::ConnectOptions;
+
+    // type Options<D> = <<D as sqlx::Database>::Connection as sqlx::Connection>::Options;
+
+    // // Provide specialized configuration for particular databases.
+    // fn specialize(__options: &mut dyn std::any::Any, __config: &Config) {
+    //     if let Some(o) = __options.downcast_mut::<sqlx::sqlite::SqliteConnectOptions>() {
+    //         *o = std::mem::take(o)
+    //             .busy_timeout(Duration::from_secs(__config.connect_timeout))
+    //             .create_if_missing(true);
+    //     }
+    // }
+
+    #[rocket::async_trait]
+    impl crate::Pool for sea_orm::Database {
+        type Error = sea_orm::DbErr;
+
+        type Connection = sea_orm::DatabaseConnection;
+
+        async fn init(figment: &Figment) -> Result<Self, Self::Error> {
+            // let config = figment.extract::<Config>()?;
+            // let mut opts = config.url.parse::<Options<D>>().map_err(Error::Init)?;
+            // opts.disable_statement_logging();
+            // specialize(&mut opts, &config);
+
+            // sqlx::pool::PoolOptions::new()
+            //     .max_connections(config.max_connections as u32)
+            //     .connect_timeout(Duration::from_secs(config.connect_timeout))
+            //     .idle_timeout(config.idle_timeout.map(Duration::from_secs))
+            //     .min_connections(config.min_connections.unwrap_or_default())
+            //     .connect_with(opts)
+            //     .await
+            //     .map_err(Error::Init)
+            Ok(sea_orm::Database {})
+        }
+
+        async fn get(&self) -> Result<Self::Connection, Self::Error> {
+            // self.acquire().await.map_err(Error::Get)
+            // let con = sea_orm::Database::connect("sqlite::memory:").await;
+
+            // Ok(sea_orm::Database::connect("sqlite::memory:").await.unwrap())
+            // "mysql://root:@localhost"
+            Ok(
+                sea_orm::Database::connect("mysql://root:@localhost/rocket_example")
+                    .await
+                    .unwrap(),
+            )
+        }
+    }
+}
 
 #[cfg(feature = "mongodb")]
 mod mongodb {

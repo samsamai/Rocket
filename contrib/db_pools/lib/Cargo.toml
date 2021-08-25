@@ -23,6 +23,7 @@ sqlx_sqlite = ["sqlx", "sqlx/sqlite"]
 sqlx_mssql = ["sqlx", "sqlx/mssql"]
 sqlx_macros = ["sqlx/macros"]
 # implicit features: mongodb
+seaorm_sqlx_sqlite = ["sqlx", "sqlx/sqlite"]
 
 [dependencies.rocket]
 path = "../../../core/lib"
@@ -32,6 +33,14 @@ default-features = false
 [dependencies.rocket_db_pools_codegen]
 path = "../codegen"
 version = "0.1.0-rc"
+
+[dependencies.sea-orm]
+# path = "../../../../sea-orm"
+git = "https://github.com/SeaQL/sea-orm.git"
+branch = "master"
+default-features = true
+features = ["sqlx-sqlite"]
+optional = false
 
 [dependencies.deadpool]
 version = "0.8"
